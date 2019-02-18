@@ -3,8 +3,6 @@
 resource "aws_eip" "bastion-eip" {
   instance = "${aws_instance.bastion.id}"
   vpc      = true
-  instance = "${module.ec2.id[0]}"
-
   tags = {
     Name        = "BastionEIP"
     Terraform   = "true"
