@@ -1,7 +1,6 @@
 ##########################################################
 # Create the Bastion server
 resource "aws_eip" "bastion-eip" {
-  instance = "${aws_instance.bastion.id}"
   vpc      = true
   tags = {
     Name        = "BastionEIP"
