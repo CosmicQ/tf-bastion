@@ -4,7 +4,7 @@ Bastion host module for Terraform
 
 Example
 ```
-module "asg" {
+module "bastion" {
   source               = "CosmicQ/tf-bastion"
   version              = "latest"
   name                 = "bastion"
