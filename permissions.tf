@@ -1,7 +1,7 @@
 # Bastion security group
 module "bastion_sg" {
   source                       = "terraform-aws-modules/security-group/aws//modules/ssh"
-  name                         = "bastion-sg"
+  name                         = "bastion_sg"
   description                  = "Allow traffic to Bastion"
   vpc_id                       = "${var.vpc_id}"
   ingress_cidr_blocks          = "${var.bastion_ingress}"
