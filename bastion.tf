@@ -1,4 +1,20 @@
 ##########################################################
+# Create the Bastion server
+resource "aws_eip" "bastion-eip" {
+  instance = "${aws_instance.bastion.id}"
+  vpc      = true
+  instance = "${module.ec2.id[0]}"
+
+  tags = {
+    Name        = "BastionEIP"
+    Terraform   = "true"
+    Environment = "${var.env}"
+    Workspace   = "${terraform.workspace}"
+  }
+
+}
+
+##########################################################
 # Create the bastion host + ASG
 module "asg" {
   source               = "terraform-aws-modules/autoscaling/aws"
