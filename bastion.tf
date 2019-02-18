@@ -10,6 +10,8 @@ resource "aws_eip" "bastion-eip" {
 
 }
 
+
+
 ##########################################################
 # Create the bastion host + ASG
 module "asg" {
@@ -22,7 +24,7 @@ module "asg" {
   key_name             = "${var.bastion_key_name}"
   image_id             = "${data.aws_ami.amazon_linux.id}"
   instance_type        = "${var.bastion_instance_type}"
-  security_groups      = ["${aws_security_group.bastion_sg.id}"]
+  security_groups      = ["${module.bastion_sg.id}"]
   user_data            = "${file("${var.bastion_user_data}")}"
   iam_instance_profile = "bastion-profile"
 
