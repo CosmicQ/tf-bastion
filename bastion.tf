@@ -26,7 +26,7 @@ module "asg" {
   instance_type        = "${var.bastion_instance_type}"
   security_groups      = ["${module.bastion_sg.this_security_group_id}"]
   user_data            = "${file("${var.bastion_user_data}")}"
-  iam_instance_profile = "bastion-profile"
+  iam_instance_profile = "bastion_role"
 
   ebs_block_device = [
     {
