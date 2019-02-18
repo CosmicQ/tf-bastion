@@ -72,6 +72,8 @@ EOC
          --resource bastionAutoScalingGroup ",
          --region ", { "Ref": "AWS::Region" },
 EOF
+}
+}
 
 ##########################################################
 # Create the Bastion server

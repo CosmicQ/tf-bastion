@@ -4,7 +4,7 @@ module "bastion_sg" {
   name                         = "bastion-sg"
   description                  = "Allow traffic to Bastion"
   vpc_id                       = "${module.vpc.vpc_id}"
-  ingress_cidr_blocks          = "${$var.bastion_ingress}"
+  ingress_cidr_blocks          = "${var.bastion_ingress}"
 }
 
 resource "aws_cloudwatch_log_group" "bastion_lg" {
