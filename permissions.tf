@@ -88,3 +88,9 @@ resource "aws_iam_instance_profile" "bastion_profile" {
   name = "bastion_profile"
   role = "${aws_iam_role.bastion_role.name}"
 }
+
+resource "aws_iam_policy_attachment" "bastion-attach" {
+  name       = "bastion-attachment"
+  roles      = ["${aws_iam_role.bastion_role.bastion_role}"]
+  policy_arn = "${aws_iam_policy.policy.arn}"
+}
