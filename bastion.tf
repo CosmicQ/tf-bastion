@@ -8,7 +8,6 @@ resource "aws_eip" "bastion-eip" {
   tags = {
     Name        = "BastionEIP"
     Terraform   = "true"
-    Environment = "${var.env}"
     Workspace   = "${terraform.workspace}"
   }
 
@@ -47,7 +46,7 @@ module "asg" {
 
   # Auto scaling group
   asg_name                  = "bastion-asg"
-  vpc_zone_identifier       = "${var.vpc_zone_identifier}"
+  vpc_zone_identifier       = "${var.public_subnets}"
   health_check_type         = "EC2"
   min_size                  = "${var.bastion_min_size}"
   max_size                  = "${var.bastion_max_size}"

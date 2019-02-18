@@ -1,10 +1,11 @@
 ##########################################################
 # Define Variables
-variable "vpc_zone_identifier" {
+variable "vpc_id" { }
+variable "public_subnets" {
   # This is intended to be used with the vpc terraform module.  This can be modified to
   # specifiy two public subnets though.
-  default = ["${element(module.vpc.public_subnets, 0)}", "${element(module.vpc.public_subnets, 1)}"]
-  # default = ["10.10.1.0/24", "10.10.2.0/24"]
+  #default = ["${element(module.vpc.public_subnets, 0)}", "${element(module.vpc.public_subnets, 1)}"]
+  default = ["10.10.1.0/24", "10.10.2.0/24"]
 }
 
 variable "bastion_key_name" {}
