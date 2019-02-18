@@ -35,8 +35,8 @@ resource "aws_iam_role" "bastion_role" {
 EOF
 }
 resource "aws_iam_policy" "policy" {
-  name        = "test-policy"
-  description = "A test policy"
+  name        = "bastion-policy"
+  description = "A set of permissions for a Bastion host"
   policy      = <<EOF
 {
     "Version": "2012-10-17",

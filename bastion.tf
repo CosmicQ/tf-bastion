@@ -44,7 +44,7 @@ module "asg" {
   ]
 
   # Auto scaling group
-  asg_name                  = "bastion-asg"
+  asg_name                  = "bastion"
   vpc_zone_identifier       = "${var.public_subnets}"
   health_check_type         = "EC2"
   min_size                  = "${var.bastion_min_size}"
