@@ -19,8 +19,8 @@ rpm -Uvh https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/late
 /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:AmazonCloudWatch-hcs-prod -s
 
 # EIP=`aws ec2 describe-addresses --query 'Addresses[].PublicIp[]' --filters "Name=tag:Name,Values=BastionEIP"`
-ASSOCIATION_ID=`aws ec2 describe-addresses --query 'Addresses[].AssociationId[]' --filters "Name=tag:Name,Values=BastionEIP"`
-ALLOCATION_ID=`aws ec2 describe-addresses --query 'Addresses[].AllocationId[]' --filters "Name=tag:Name,Values=BastionEIP"`
+ASSOCIATION_ID=`aws --region $REGION ec2 describe-addresses --query 'Addresses[].AssociationId[]' --filters "Name=tag:Name,Values=BastionEIP"`
+ALLOCATION_ID=`aws --region $REGION ec2 describe-addresses --query 'Addresses[].AllocationId[]' --filters "Name=tag:Name,Values=BastionEIP"`
 
 aws --region $REGION ec2 disassociate-address --association-id $ASSOCIATION_ID
 aws --region $REGION ec2 associate-address --instance-id $INSTANCE_ID --allocation-id $ALLOCATION_ID 

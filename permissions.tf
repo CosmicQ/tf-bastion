@@ -48,6 +48,7 @@ resource "aws_iam_policy" "policy" {
                 "ec2:DisassociateAddress",
                 "tag:GetResources",
                 "ec2:DescribeAddresses",
+                "ec2:DescribeInstances",
                 "ec2:DescribeAvailabilityZones",
                 "tag:GetTagValues",
                 "ec2:DescribeTags",
