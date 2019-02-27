@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #update
-yum update -y && yum install -y aws-cli wget
+yum update -y && yum install -y aws-cli wget amazon-cloudwatch-agent awslogs
 
 # Set vars
 REGION=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//'`
@@ -14,11 +14,9 @@ ENVIRONMENT=`aws ec2 describe-instances --region $REGION --instance-ids $INSTANC
 sed -i "s/HOSTNAME=localhost.localdomain/HOSTNAME=${NAME}-${NUM}/" /etc/sysconfig/network
 hostname $NAME-$NUM
 
-rpm -Uvh https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
-
+#rpm -Uvh https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
 #/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:AmazonCloudWatch -s
 
-# EIP=`aws ec2 describe-addresses --query 'Addresses[].PublicIp[]' --filters "Name=tag:Name,Values=BastionEIP"`
 ASSOCIATION_ID=`aws --region $REGION ec2 describe-addresses --query 'Addresses[].AssociationId[]' --filters "Name=tag:Name,Values=BastionEIP" --output text`
 ALLOCATION_ID=`aws --region $REGION ec2 describe-addresses --query 'Addresses[].AllocationId[]' --filters "Name=tag:Name,Values=BastionEIP" --output text`
 
