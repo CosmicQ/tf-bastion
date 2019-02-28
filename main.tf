@@ -33,7 +33,7 @@ variable "bastion_user_data" {
 
 ##########################################################
 # Get AMI
-data "aws_ami" "amazon-linux-2" {
+data "aws_ami" "amazon_linux2" {
  most_recent = true
  owners      = "amazon"
 
