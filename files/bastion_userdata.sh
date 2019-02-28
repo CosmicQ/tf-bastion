@@ -48,7 +48,7 @@ touch /var/log/commands
 chmod 662 /var/log/commands
 
 # Send log files to cloudwatch logs
-if [ -e /opt/aws/amazon-cloudwatch-agent/etc ]&&[ -ne /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json ]; then
+if [ -e /opt/aws/amazon-cloudwatch-agent/etc ]&&[ ! -f /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json ]; then
   echo "Cloudwatch agent is installed, configure and start it"
   cat <<EOF >> /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 {
