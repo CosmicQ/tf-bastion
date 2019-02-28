@@ -1,14 +1,14 @@
 #!/bin/bash
 
 #update
-yum update -y && yum install -y aws-cli wget amazon-cloudwatch-agent
+yum update -y && yum install -y aws-cli
 
 # Set vars
 declare -rx REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//')
 declare -rx NUM=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4 |awk -F. '{print $3"-"$4}')
 declare -rx INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-declare -rx NAME=$(aws ec2 describe-instances --region $REGION --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==\`Name\`].Value' --output text)
-declare -rx ENVIRONMENT=$(aws ec2 describe-instances --region $REGION --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==\`Environment\`].Value' --output text)
+declare -rx NAME=$(aws ec2 describe-instances --region $REGION --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`Name`].Value' --output text)
+declare -rx ENVIRONMENT=$(aws ec2 describe-instances --region $REGION --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`Environment`].Value' --output text)
 # For Instances that need Elastic IP addresses
 declare -rx ASSOCIATION_ID=$(aws --region $REGION ec2 describe-addresses --query 'Addresses[].AssociationId[]' --filters "Name=tag:Name,Values=BastionEIP" --output text)
 declare -rx ALLOCATION_ID=$(aws --region $REGION ec2 describe-addresses --query 'Addresses[].AllocationId[]' --filters "Name=tag:Name,Values=BastionEIP" --output text)
@@ -31,6 +31,11 @@ declare -rx IP=$(echo $SSH_CLIENT | awk '{print $1}')
 declare -rx BASTION_LOG=/var/log/commands
 declare -rx PROMPT_COMMAND='history -a >(logger -t "ON: $(date)   [FROM]:${IP}   [USER]:${USER}   [PWD]:${PWD}" -s 2>>${BASTION_LOG})'
 EOC
+
+touch /var/log/commands
+chmod 662 /var/log/commands
+
+rpm -Uvh https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
 
 # Send log files to cloudwatch logs
 cat <<EOF >> /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
