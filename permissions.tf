@@ -5,15 +5,23 @@ module "bastion_sg" {
   description                  = "Allow traffic to Bastion"
   vpc_id                       = "${var.vpc_id}"
   ingress_cidr_blocks          = "${var.bastion_ingress}"
+  tags     = {
+    Name        = "BastionSG"
+    Terraform   = "true"
+    Workspace   = "${terraform.workspace}"
+  }
 }
 
-resource "aws_cloudwatch_log_group" "bastion_lg" {
-  name = "Bastion"
+resource "aws_cloudwatch_log_group" "messages_lg" {
+  name = "/var/log/messages"
 }
 
-resource "aws_cloudwatch_log_stream" "bastion_ls" {
-  name           = "BastionStream1"
-  log_group_name = "${aws_cloudwatch_log_group.bastion_lg.name}"
+resource "aws_cloudwatch_log_group" "secure_lg" {
+  name = "/var/log/secure"
+}
+
+resource "aws_cloudwatch_log_group" "commands_lg" {
+  name = "/var/log/commands"
 }
 
 resource "aws_iam_role" "bastion_role" {
@@ -34,6 +42,7 @@ resource "aws_iam_role" "bastion_role" {
 }
 EOF
 }
+
 resource "aws_iam_policy" "policy" {
   name        = "bastion-policy"
   description = "A set of permissions for a Bastion host"

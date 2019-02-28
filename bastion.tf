@@ -2,12 +2,13 @@
 # Create the Bastion server
 resource "aws_eip" "bastion-eip" {
   vpc      = true
-  tags = {
+  # Name        = "BastionEIP"
+  tags     = {
+    bastion     = "true"
     Name        = "BastionEIP"
     Terraform   = "true"
     Workspace   = "${terraform.workspace}"
   }
-
 }
 
 
@@ -17,7 +18,7 @@ resource "aws_eip" "bastion-eip" {
 module "asg" {
   source               = "terraform-aws-modules/autoscaling/aws"
   version              = "2.9.1"
-  name                 = "bastion-asg"
+  name                 = "${var.bastion_name}"
 
   # Launch configuration
   lc_name              = "bastion-lc"
@@ -44,7 +45,7 @@ module "asg" {
   ]
 
   # Auto scaling group
-  asg_name                  = "bastion"
+  asg_name                  = "bastion-asg"
   vpc_zone_identifier       = "${var.public_subnets}"
   health_check_type         = "EC2"
   min_size                  = "${var.bastion_min_size}"
@@ -52,6 +53,11 @@ module "asg" {
   desired_capacity          = "${var.bastion_desired_capacity}"
   wait_for_capacity_timeout = 0
   tags = [
+    {
+      key                 = "bastion"
+      value               = "true"
+      propagate_at_launch = true
+    },
     {
       key                 = "Terraform"
       value               = "true"
@@ -63,5 +69,6 @@ module "asg" {
       propagate_at_launch = true
     }
   ]
+
 
 }
