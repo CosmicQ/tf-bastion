@@ -35,6 +35,7 @@ variable "bastion_user_data" {
 # Get AMI
 data "aws_ami" "amazon-linux-2" {
  most_recent = true
+ owners      = "amazon"
 
  filter {
    name   = "owner-alias"
