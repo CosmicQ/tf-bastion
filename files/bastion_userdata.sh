@@ -38,7 +38,8 @@ chmod 662 /var/log/commands
 rpm -Uvh https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
 
 # Send log files to cloudwatch logs
-cat <<EOF >> /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+if [ -e /opt/aws/amazon-cloudwatch-agent/etc ]; then
+  cat <<EOF >> /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 {
     "logs": {
         "force_flush_interval": 5,
@@ -48,21 +49,21 @@ cat <<EOF >> /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
                     {
                         "file_path": "/var/log/commands",
                         "log_group_name": "/var/log/commands",
-                        "log_stream_name": "{hostname}-{instance_id}",
+                        "log_stream_name": "{ip_address}-{instance_id}",
                         "timestamp_format": "%Y-%m-%d %H:%M:%S",
                         "timezone": "UTC"
                     },
                     {
                         "file_path": "/var/log/secure",
                         "log_group_name": "/var/log/secure",
-                        "log_stream_name": "{hostname}-{instance_id}",
+                        "log_stream_name": "{ip_address}-{instance_id}",
                         "timestamp_format": "%Y-%m-%d %H:%M:%S",
                         "timezone": "UTC"
                     },
                     {
                         "file_path": "/var/log/messages",
                         "log_group_name": "/var/log/messages",
-                        "log_stream_name": "{hostname}-{instance_id}",
+                        "log_stream_name": "{ip_address}-{instance_id}",
                         "timestamp_format": "%Y-%m-%d %H:%M:%S",
                         "timezone": "UTC"
                     }                                        
@@ -73,11 +74,12 @@ cat <<EOF >> /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 }
 EOF
 
-if [ -x /bin/systemctl ] || [ -x /usr/bin/systemctl ]; then
-  systemctl enable amazon-cloudwatch-agent.service
-  systemctl restart amazon-cloudwatch-agent.service
-else
-  start amazon-cloudwatch-agent
+  if [ -x /bin/systemctl ] || [ -x /usr/bin/systemctl ]; then
+    systemctl enable amazon-cloudwatch-agent.service
+    systemctl restart amazon-cloudwatch-agent.service
+  else
+    start amazon-cloudwatch-agent
+  fi
 fi
 
 # Add cron.  Do security updates, but no kernel updates since those require a reboot
