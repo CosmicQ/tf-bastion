@@ -68,6 +68,11 @@ module "asg" {
       propagate_at_launch = true
     },
     {
+      key                 = "s3_bucket_name"
+      value               = "${var.bastion_s3_bucket}"
+      propagate_at_launch = true
+    },
+    {
       key                 = "Terraform"
       value               = "true"
       propagate_at_launch = true
