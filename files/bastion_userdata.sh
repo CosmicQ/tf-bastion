@@ -71,14 +71,7 @@ if [ -e /opt/aws/amazon-cloudwatch-agent/etc ]&&[ ! -f /opt/aws/amazon-cloudwatc
                         "log_stream_name": "{ip_address}-{instance_id}",
                         "timestamp_format": "%Y-%m-%d %H:%M:%S",
                         "timezone": "UTC"
-                    },
-                    {
-                        "file_path": "/var/log/messages",
-                        "log_group_name": "/var/log/messages",
-                        "log_stream_name": "{ip_address}-{instance_id}",
-                        "timestamp_format": "%Y-%m-%d %H:%M:%S",
-                        "timezone": "UTC"
-                    }                                        
+                    }
                 ]
             }
         }
