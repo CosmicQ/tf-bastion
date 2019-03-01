@@ -181,7 +181,10 @@ resource "aws_iam_policy" "policy" {
             "Action": [
                 "s3:*"
             ],
-            "Resource": "arn:aws:s3:::${var.bastion-s3-bucket/*"
+            "Resource": [
+                         "arn:aws:s3:::${var.bastion-s3-bucket}",
+                         "arn:aws:s3:::${var.bastion-s3-bucket}/*"
+                        ]
         },
         {
             "Sid": "bastion2",
