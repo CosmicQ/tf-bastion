@@ -96,22 +96,24 @@ fi
 
 # If we have a SSH host ID alredy established, let's use that
 echo "### Establishing SSH host ID"
-if [ ! aws s3 ls q-test-bastion/sshd/ssh_host_ecdsa_key ]; then
+if [ ! $(aws s3 ls q-test-bastion/sshd/ssh_host_ecdsa_key) ]; then
   # Host identity has not been established.  Use this hosts identity as the baseline
-  aws s3 cp /etc/sshd/ssh_host_ecdsa_key s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key
-  aws s3 cp /etc/sshd/ssh_host_ecdsa_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key.pub
-  aws s3 cp /etc/sshd/ssh_host_ed25519_key s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key
-  aws s3 cp /etc/sshd/ssh_host_ed25519_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key.pub
-  aws s3 cp /etc/sshd/ssh_host_rsa_key s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key
-  aws s3 cp /etc/sshd/ssh_host_rsa_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key.pub
+  aws s3 cp /etc/ssh/ssh_host_ecdsa_key s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key
+  aws s3 cp /etc/ssh/ssh_host_ecdsa_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key.pub
+  aws s3 cp /etc/ssh/ssh_host_ed25519_key s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key
+  aws s3 cp /etc/ssh/ssh_host_ed25519_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key.pub
+  aws s3 cp /etc/ssh/ssh_host_rsa_key s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key
+  aws s3 cp /etc/ssh/ssh_host_rsa_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key.pub
 else
   # The host id was already established.  Copy it over and restart ssh
-  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key /etc/sshd/ssh_host_ecdsa_key
-  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key.pub /etc/sshd/ssh_host_ecdsa_key.pub
-  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key /etc/sshd/ssh_host_ed25519_key
-  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key.pub /etc/sshd/ssh_host_ed25519_key.pub
-  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key /etc/sshd/ssh_host_rsa_key
-  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key.pub /etc/sshd/ssh_host_rsa_key.pub
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key /etc/ssh/ssh_host_ecdsa_key
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key.pub /etc/ssh/ssh_host_ecdsa_key.pub
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key /etc/ssh/ssh_host_ed25519_key
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key.pub /etc/ssh/ssh_host_ed25519_key.pub
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key.pub /etc/ssh/ssh_host_rsa_key.pub
+
+  chmod 600 /etc/ssh/ssh_host_*
 
   if [ -x /bin/systemctl ] || [ -x /usr/bin/systemctl ]; then
     systemctl restart sshd.service
