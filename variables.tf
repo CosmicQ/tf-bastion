@@ -48,4 +48,5 @@ data "aws_ami" "amazon_linux2" {
    name   = "name"
    values = ["amzn2-ami-hvm*"]
  }
+ 
 }

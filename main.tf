@@ -1,23 +1,4 @@
 ##########################################################
-# Get AMI
-data "aws_ami" "amazon_linux2" {
- most_recent = true
- owners      = ["amazon"]
-
- filter {
-   name   = "owner-alias"
-   values = ["amazon"]
- }
-
- filter {
-   name   = "name"
-   values = ["amzn2-ami-hvm*"]
- }
- 
-}
-
-
-##########################################################
 # Create the bastion host + ASG
 module "asg" {
   source               = "terraform-aws-modules/autoscaling/aws"
