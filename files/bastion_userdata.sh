@@ -120,6 +120,17 @@ else
   fi
 fi
 
+# Copy over any public keys that were added to s3://bastion-bucket/keys/
+echo "### Adding keys from $S3_BUCKET_NAME/keys/"
+aws s3 ls $S3_BUCKET_NAME/keys/ | while read line; do
+  file=$(echo $line | awk '{print $4}')
+  if [[ "${file}" =~ .pub$ ]]; then
+    echo "# adding s3://$S3_BUCKET_NAME/keys/$file"
+    key=$(aws s3 cp --quiet s3://$S3_BUCKET_NAME/keys/$file /dev/stdout)
+    echo $key >> ~ec2-user/.ssh/authorized_keys
+  fi
+done
+
 # Add cron.  Do security updates, but no kernel updates since those require a reboot
 echo "### Updating root cron"
 cat <<'EOC'>> /var/spool/cron/root
