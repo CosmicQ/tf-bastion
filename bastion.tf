@@ -11,7 +11,16 @@ resource "aws_eip" "bastion-eip" {
   }
 }
 
+resource "aws_s3_bucket" "bastion_bucket" {
+  bucket = "${var.bastion_s3_bucket}"
+  acl    = "private"
 
+  tags     = {
+    bastion     = "true"
+    Terraform   = "true"
+    Workspace   = "${terraform.workspace}"
+  }
+}
 
 ##########################################################
 # Create the bastion host + ASG
