@@ -11,6 +11,7 @@ module "tf-bastion" {
   public_subnets       = ["subnet-xxxxxxxxxxxxxxxa", "subnet-xxxxxxxxxxxxxxxxb"]
   bastion_key_name     = "key_bastion"
   bastion_user_data    = "modules/tf-bastion/files/bastion_userdata.sh"
+  bastion_s3_bucket    = "mydomain-bastion"
 }
 
 ```
