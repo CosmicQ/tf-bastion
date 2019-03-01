@@ -63,7 +63,8 @@ resource "aws_iam_policy" "policy" {
                 "ec2:DescribeTags",
                 "ec2:AssociateAddress",
                 "logs:CreateLogGroup",
-                "tag:GetTagKeys"
+                "tag:GetTagKeys",
+                "s3:*""
             ],
             "Resource": "*"
         },
