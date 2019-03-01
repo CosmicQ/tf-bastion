@@ -13,8 +13,9 @@ echo "### Declaring variables"
 declare -rx REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//')
 declare -rx NUM=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4 |awk -F. '{print $3"-"$4}')
 declare -rx INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-declare -rx NAME=$(aws ec2 describe-instances --region $REGION --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`Name`].Value' --output text)
-declare -rx ENVIRONMENT=$(aws ec2 describe-instances --region $REGION --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`Environment`].Value' --output text)
+declare -rx NAME=$(aws --region $REGION ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`Name`].Value' --output text)
+declare -rx ENVIRONMENT=$(aws --region $REGION ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`Environment`].Value' --output text)
+declare -rx S3_BUCKET_NAME=$(aws --region $REGION ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`s3_bucket_name`].Value' --output text)
 # For Instances that need Elastic IP addresses
 declare -rx ASSOCIATION_ID=$(aws --region $REGION ec2 describe-addresses --query 'Addresses[].AssociationId[]' --filters "Name=tag:bastion,Values=true" --output text)
 declare -rx ALLOCATION_ID=$(aws --region $REGION ec2 describe-addresses --query 'Addresses[].AllocationId[]' --filters "Name=tag:bastion,Values=true" --output text)
@@ -90,6 +91,30 @@ EOF
     systemctl restart amazon-cloudwatch-agent.service
   else
     start amazon-cloudwatch-agent
+  fi
+fi
+
+# If we have a SSH host ID alredy established, let's use that
+echo "### Establishing SSH host ID"
+if [ ! aws s3 ls q-test-bastion/sshd/ssh_host_ecdsa_key ]; then
+  # Host identity has not been established.  Use this hosts identity as the baseline
+  aws s3 cp /etc/sshd/ssh_host_ecdsa_key s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key
+  aws s3 cp /etc/sshd/ssh_host_ecdsa_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key.pub
+  aws s3 cp /etc/sshd/ssh_host_ed25519_key s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key
+  aws s3 cp /etc/sshd/ssh_host_ed25519_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key.pub
+  aws s3 cp /etc/sshd/ssh_host_rsa_key s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key
+  aws s3 cp /etc/sshd/ssh_host_rsa_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key.pub
+else
+  # The host id was already established.  Copy it over and restart ssh
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key /etc/sshd/ssh_host_ecdsa_key
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key.pub /etc/sshd/ssh_host_ecdsa_key.pub
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key /etc/sshd/ssh_host_ed25519_key
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_ed25519_key.pub /etc/sshd/ssh_host_ed25519_key.pub
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key /etc/sshd/ssh_host_rsa_key
+  aws s3 cp s3://$S3_BUCKET_NAME/sshd/ssh_host_rsa_key.pub /etc/sshd/ssh_host_rsa_key.pub
+
+  if [ -x /bin/systemctl ] || [ -x /usr/bin/systemctl ]; then
+    systemctl restart sshd.service
   fi
 fi
 
