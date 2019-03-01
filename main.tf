@@ -31,6 +31,9 @@ variable "bastion_user_data" {
   default = "files/bastion_userdata.sh"
 }
 
+variable "bastion_s3_bucket" {
+  default = "cosmic-bastion"
+}
 ##########################################################
 # Get AMI
 data "aws_ami" "amazon_linux2" {
