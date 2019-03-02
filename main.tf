@@ -205,3 +205,26 @@ resource "aws_iam_policy_attachment" "bastion-attach" {
   roles      = ["${aws_iam_role.bastion_role.name}"]
   policy_arn = "${aws_iam_policy.policy.arn}"
 }
+
+###################################
+#
+# Optional resources
+#
+###################################
+
+data "aws_route53_zone" "selected" {
+  count  = "${var.bastion_dns}"
+  name   = "${var.bastion_dns}."
+}
+
+resource "aws_route53_record" "bastion_name" {
+  count   = "${var.bastion_dns}"
+  zone_id = "${data.aws_route53_zone.selected.zone_id}"
+  name    = "${var.bastion_name}.${data.aws_route53_zone.selected.name}"
+  type    = "A"
+  ttl     = "300"
+  records = ["${aws_eip.bastion-eip.public_ip}"]
+}
+
+
+

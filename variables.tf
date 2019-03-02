@@ -11,6 +11,7 @@ variable "bastion_name" {
 }
 variable "bastion_key_name" {
   type    = "string"
+  default = "default"
 }
 variable "bastion_ingress" {
   default = ["0.0.0.0/0"]
@@ -32,6 +33,9 @@ variable "bastion_user_data" {
 }
 
 variable "bastion_s3_bucket" {}
+variable "bastion_dns" {
+  default = ""
+}
 
 ##########################################################
 # Get AMI
