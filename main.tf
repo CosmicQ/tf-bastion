@@ -213,12 +213,10 @@ resource "aws_iam_policy_attachment" "bastion-attach" {
 ###################################
 
 data "aws_route53_zone" "selected" {
-  count  = "${var.bastion_dns}"
   name   = "${var.bastion_dns}."
 }
 
 resource "aws_route53_record" "bastion_name" {
-  count   = "${var.bastion_dns}"
   zone_id = "${data.aws_route53_zone.selected.zone_id}"
   name    = "${var.bastion_name}.${data.aws_route53_zone.selected.name}"
   type    = "A"
