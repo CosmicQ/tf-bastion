@@ -213,15 +213,16 @@ resource "aws_iam_policy_attachment" "bastion-attach" {
 ###################################
 
 data "aws_route53_zone" "selected" {
-  name   = "${var.bastion_dns}."
+  name       = "${var.bastion_dns}."
 }
 
 resource "aws_route53_record" "bastion_name" {
-  zone_id = "${data.aws_route53_zone.selected.zone_id}"
-  name    = "${var.bastion_name}.${data.aws_route53_zone.selected.name}"
-  type    = "A"
-  ttl     = "300"
-  records = ["${aws_eip.bastion-eip.public_ip}"]
+  count      = "${var.create_bastion_dns}"
+  zone_id    = "${data.aws_route53_zone.selected.zone_id}"
+  name       = "${var.bastion_name}.${data.aws_route53_zone.selected.name}"
+  type       = "A"
+  ttl        = "300"
+  records    = ["${aws_eip.bastion-eip.public_ip}"]
 }
 
 
