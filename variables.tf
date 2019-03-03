@@ -1,6 +1,7 @@
 ##########################################################
 # Define Variables
 variable "vpc_id" { }
+
 variable "public_subnets" {
   type    = "list"
   #["${element(module.vpc.public_subnets, 0)}", "${element(module.vpc.public_subnets, 1)}"]
@@ -33,6 +34,7 @@ variable "bastion_user_data" {
 }
 
 variable "bastion_s3_bucket" {}
+
 variable "bastion_dns" {
   default = ""
 }
