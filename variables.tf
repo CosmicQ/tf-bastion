@@ -43,7 +43,6 @@ variable "bastion_dns" {
 
 variable "create_bastion_dns" {
   description = "Boolean to determine if we would like to create a DNS record"
-  type        = "bool"
   default     = false
 }
 
