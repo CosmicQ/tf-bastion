@@ -35,16 +35,17 @@ variable "bastion_user_data" {
 
 variable "bastion_s3_bucket" {}
 
-variable "bastion_dns" {
+variable "create_bastion_dns" {
+  description = "Boolean to determine if we would like to create a DNS record"
+  default     = false
+}
+
+variable "bastion_domain" {
   description = "Domain name to use for bastion server (foo.com not bastion.foo.com)"
   type        = "string"
   default     = ""
 }
 
-variable "create_bastion_dns" {
-  description = "Boolean to determine if we would like to create a DNS record"
-  default     = false
-}
 
 ##########################################################
 # Get AMI
