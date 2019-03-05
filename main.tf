@@ -213,6 +213,7 @@ resource "aws_iam_policy_attachment" "bastion-attach" {
 ###################################
 
 data "aws_route53_zone" "selected" {
+  count      = "${var.create_bastion_dns}"
   name       = "${var.bastion_domain}."
 }
 
