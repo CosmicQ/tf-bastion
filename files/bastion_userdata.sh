@@ -89,7 +89,7 @@ fi
 
 # If we have a SSH host ID alredy established, let's use that
 echo "### Establishing SSH host ID"
-if [ ! $(aws s3 ls q-test-bastion/sshd/ssh_host_ecdsa_key) ]; then
+if [ ! $(aws s3 ls ${S3_BUCKET_NAME}/sshd/ssh_host_ecdsa_key) ]; then
   # Host identity has not been established.  Use this hosts identity as the baseline
   aws s3 cp /etc/ssh/ssh_host_ecdsa_key s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key
   aws s3 cp /etc/ssh/ssh_host_ecdsa_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key.pub
