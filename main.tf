@@ -79,8 +79,9 @@ resource "aws_eip" "bastion-eip" {
 
 # Create the S3 bucket
 resource "aws_s3_bucket" "bastion_bucket" {
-  bucket = "${var.bastion_s3_bucket}"
-  acl    = "private"
+  bucket        = "${var.bastion_s3_bucket}"
+  acl           = "private"
+  force_destroy = true
 
   tags     = {
     bastion     = "true"

@@ -3,8 +3,8 @@
 # look at /var/log/cloud-init-output.log when the instance is up.
 
 #update
-echo "### Getting update and installing aws-cli"
-yum update -y && yum install -y aws-cli
+echo "### Getting update and installing aws-cli nmap-ncat"
+yum update -y && yum install -y aws-cli nmap-ncat
 echo "### Installing Cloudwatch agent"
 rpm -Uvh https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
 
