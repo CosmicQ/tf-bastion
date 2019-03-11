@@ -116,7 +116,7 @@ resource "aws_cloudwatch_log_group" "commands_lg" {
 # The bastion server needs to be able to read and write to it's S3 bucket, as well as describe instances
 # and apply the elastic IP to itself
 resource "aws_iam_role" "bastion_role" {
-  name = "bastion_role"
+  name = "${var.bastion_name}_role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -135,7 +135,7 @@ EOF
 }
 
 resource "aws_iam_policy" "policy" {
-  name        = "${var.bastion_policy_name}"
+  name        = "${var.bastion_name}_policy"
   description = "A set of permissions for a Bastion host"
   policy      = <<EOF
 {
@@ -226,6 +226,3 @@ resource "aws_route53_record" "bastion_name" {
   ttl        = "300"
   records    = ["${aws_eip.bastion-eip.public_ip}"]
 }
-
-
-

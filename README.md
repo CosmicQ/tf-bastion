@@ -70,7 +70,6 @@ the host record.
        bastion_name - required
  create_bastion_dns - required
      bastion_domain - optional
-bastion_policy_name - optional
 ```
 
 ## Outputs

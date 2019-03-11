@@ -33,10 +33,6 @@ variable "bastion_user_data" {
   default     = "files/bastion_userdata.sh"
 }
 
-variable "bastion_policy_name" {
-  default     = "bastion_policy"
-}
-
 variable "bastion_s3_bucket" {}
 
 variable "create_bastion_dns" {
