@@ -135,7 +135,7 @@ EOF
 }
 
 resource "aws_iam_policy" "policy" {
-  name        = "bastion-policy"
+  name        = "${var.bastion_policy_name}"
   description = "A set of permissions for a Bastion host"
   policy      = <<EOF
 {
