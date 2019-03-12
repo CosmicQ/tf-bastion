@@ -46,6 +46,9 @@ variable "bastion_domain" {
   default     = ""
 }
 
+variable "environment" {
+  default     = ""
+}
 
 ##########################################################
 # Get AMI

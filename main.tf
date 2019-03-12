@@ -106,11 +106,11 @@ module "bastion_sg" {
 
 # Create the log groups (/var/log/secure as well as commdn logs)
 resource "aws_cloudwatch_log_group" "secure_lg" {
-  name = "/var/log/secure"
+  name = "${var.environment}/var/log/secure"
 }
 
 resource "aws_cloudwatch_log_group" "commands_lg" {
-  name = "/var/log/commands"
+  name = "${var.environment}/var/log/commands"
 }
 
 # The bastion server needs to be able to read and write to it's S3 bucket, as well as describe instances
