@@ -197,12 +197,12 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "bastion_profile" {
-  name = "bastion_profile"
+  name = "${var.bastion_name}_profile"
   role = "${aws_iam_role.bastion_role.name}"
 }
 
 resource "aws_iam_policy_attachment" "bastion-attach" {
-  name       = "bastion-attachment"
+  name       = "${var.bastion_name}_attachment"
   roles      = ["${aws_iam_role.bastion_role.name}"]
   policy_arn = "${aws_iam_policy.policy.arn}"
 }
