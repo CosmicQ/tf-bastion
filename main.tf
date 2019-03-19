@@ -6,7 +6,7 @@ module "asg" {
   name                 = "${var.bastion_name}"
 
   # Launch configuration
-  lc_name              = "bastion-lc"
+  lc_name              = "${var.bastion_name}_lc"
   key_name             = "${var.bastion_key_name}"
   image_id             = "${data.aws_ami.amazon_linux2.id}"
   instance_type        = "${var.bastion_instance_type}"
@@ -30,7 +30,7 @@ module "asg" {
   ]
 
   # Auto scaling group
-  asg_name                  = "bastion-asg"
+  asg_name                  = "${var.bastion_name}_asg"
   vpc_zone_identifier       = "${var.public_subnets}"
   health_check_type         = "EC2"
   min_size                  = "${var.bastion_min_size}"
@@ -71,7 +71,7 @@ resource "aws_eip" "bastion-eip" {
   # Name        = "BastionEIP"
   tags     = {
     bastion     = "true"
-    Name        = "BastionEIP"
+    Name        = "${var.bastion_name}_eip"
     Terraform   = "true"
     Workspace   = "${terraform.workspace}"
   }
@@ -93,7 +93,7 @@ resource "aws_s3_bucket" "bastion_bucket" {
 # Create the bastion security group
 module "bastion_sg" {
   source                       = "terraform-aws-modules/security-group/aws//modules/ssh"
-  name                         = "bastion_sg"
+  name                         = "${var.bastion_name}_sg"
   description                  = "Allow traffic to Bastion"
   vpc_id                       = "${var.vpc_id}"
   ingress_cidr_blocks          = "${var.bastion_ingress}"
