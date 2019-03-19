@@ -37,10 +37,10 @@ echo "Defaults env_keep += \"SSH_CLIENT\"" >> /etc/sudoers
 # Send commands to /var/log/commands
 echo "### Adding lines to /etc/bashrc"
 cat <<'EOC'>> /etc/bashrc
-export SSH_CLIENT=${SSH_CLIENT}
+export SSH_CLIENT=$${SSH_CLIENT}
 declare -rx IP=$(echo $SSH_CLIENT | awk '{print $1}')
 declare -rx BASTION_LOG=/var/log/commands
-declare -rx PROMPT_COMMAND='history -a >(logger -t "ON: $(date)   [FROM]:${IP}   [USER]:${USER}   [PWD]:${PWD}" -s 2>>${BASTION_LOG})'
+declare -rx PROMPT_COMMAND='history -a >(logger -t "ON: $(date)   [FROM]:$${IP}   [USER]:$${USER}   [PWD]:$${PWD}" -s 2>>$${BASTION_LOG})'
 EOC
 
 # Creating /var/log/commands
