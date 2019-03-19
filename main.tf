@@ -11,7 +11,7 @@ module "asg" {
   image_id             = "${data.aws_ami.amazon_linux2.id}"
   instance_type        = "${var.bastion_instance_type}"
   security_groups      = ["${module.bastion_sg.this_security_group_id}"]
-  user_data            = "${file("${var.bastion_user_data}")}"
+  user_data            = "${data.template_file.userdata.rendered}"
   iam_instance_profile = "bastion_profile"
 
   ebs_block_device = [
