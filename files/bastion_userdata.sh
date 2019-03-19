@@ -22,7 +22,7 @@ declare -rx ALLOCATION_ID=$(aws --region $REGION ec2 describe-addresses --query 
 
 #set hostname
 echo "### Setting hostname"
-sed -i "s/HOSTNAME=localhost.localdomain/HOSTNAME=${NAME}-${NUM}/" /etc/sysconfig/network
+sed -i "s/HOSTNAME=localhost.localdomain/HOSTNAME=$${NAME}-$${NUM}/" /etc/sysconfig/network
 hostname $NAME-$NUM
 
 # Detach EIP from any other instance and attach to this instance
@@ -89,7 +89,7 @@ fi
 
 # If we have a SSH host ID alredy established, let's use that
 echo "### Establishing SSH host ID"
-if [ ! $(aws s3 ls ${S3_BUCKET_NAME}/sshd/ssh_host_ecdsa_key) ]; then
+if [ ! $(aws s3 ls $S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key) ]; then
   # Host identity has not been established.  Use this hosts identity as the baseline
   aws s3 cp /etc/ssh/ssh_host_ecdsa_key s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key
   aws s3 cp /etc/ssh/ssh_host_ecdsa_key.pub s3://$S3_BUCKET_NAME/sshd/ssh_host_ecdsa_key.pub
@@ -117,7 +117,7 @@ fi
 echo "### Adding keys from $S3_BUCKET_NAME/keys/"
 aws s3 ls $S3_BUCKET_NAME/keys/ | while read line; do
   file=$(echo $line | awk '{print $4}')
-  if [[ "${file}" =~ .pub$ ]]; then
+  if [[ "$${file}" =~ .pub$ ]]; then
     echo "# adding s3://$S3_BUCKET_NAME/keys/$file"
     key=$(aws s3 cp --quiet s3://$S3_BUCKET_NAME/keys/$file /dev/stdout)
     echo $key >> ~ec2-user/.ssh/authorized_keys
