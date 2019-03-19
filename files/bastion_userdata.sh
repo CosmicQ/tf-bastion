@@ -17,8 +17,8 @@ declare -rx NAME=$(aws --region $REGION ec2 describe-instances --instance-ids $I
 declare -rx ENVIRONMENT=$(aws --region $REGION ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`Environment`].Value' --output text)
 declare -rx S3_BUCKET_NAME=$(aws --region $REGION ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].Tags[?Key==`s3_bucket_name`].Value' --output text)
 # For Instances that need Elastic IP addresses
-declare -rx ASSOCIATION_ID=$(aws --region $REGION ec2 describe-addresses --query 'Addresses[].AssociationId[]' --filters "Name=tag:Name,Values=${var.bastion_name}_eip" --output text)
-declare -rx ALLOCATION_ID=$(aws --region $REGION ec2 describe-addresses --query 'Addresses[].AllocationId[]' --filters "Name=tag:Name,Values=${var.bastion_name}_eip" --output text)
+declare -rx ASSOCIATION_ID=$(aws --region $REGION ec2 describe-addresses --query 'Addresses[].AssociationId[]' --filters "Name=tag:Name,Values=${bastion_name}_eip" --output text)
+declare -rx ALLOCATION_ID=$(aws --region $REGION ec2 describe-addresses --query 'Addresses[].AllocationId[]' --filters "Name=tag:Name,Values=${bastion_name}_eip" --output text)
 
 #set hostname
 echo "### Setting hostname"
