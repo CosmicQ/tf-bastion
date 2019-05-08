@@ -30,7 +30,7 @@ variable "bastion_desired_capacity" {
   default     = "1"
 }
 variable "bastion_user_data" {
-  default     = "files/bastion_userdata.sh"
+  default     = "${path.module}/files/bastion_userdata.sh"
 }
 
 variable "bastion_s3_bucket" {}
