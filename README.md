@@ -26,7 +26,7 @@ module "bastion" {
 
   bastion_ingress      = ["1.2.3.4/32"]
   bastion_key_name     = "my_key"
-  bastion_user_data    = "${path.module}files/bastion_userdata.sh"
+  bastion_user_data    = "${path.module}/files/bastion_userdata.sh"
   bastion_s3_bucket    = "mydomain-bastion"
   bastion_name         = "bastion"
 
