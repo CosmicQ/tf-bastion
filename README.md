@@ -26,7 +26,7 @@ module "bastion" {
 
   bastion_ingress      = ["1.2.3.4/32"]
   bastion_key_name     = "my_key"
-  bastion_user_data    = "files/bastion_userdata.sh"
+  bastion_user_data    = "${path.module}files/bastion_userdata.sh"
   bastion_s3_bucket    = "mydomain-bastion"
   bastion_name         = "bastion"
 
@@ -56,6 +56,8 @@ typed.
 DNS for your bastion host is an optional function.  Just set the `create_bastion_dns` var to true, and fill 
 in the domain for `bastion_dns`.  This module will use `${var.bastion_name}.${var.bastion_domain}` to create 
 the host record.
+
+NOTE: For 'bastion_user_data' you can use the default as listed above in the example, or provide your own userdata script.
 
 ## Inputs
 ```
