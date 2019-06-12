@@ -29,8 +29,9 @@ variable "bastion_max_size" {
 variable "bastion_desired_capacity" {
   default     = "1"
 }
-variable "bastion_user_data" {
-  default     = "files/bastion_userdata.sh"
+
+variable bastion_user_data {
+  default = "files/bastion_userdata.sh"
 }
 
 variable "bastion_s3_bucket" {}
