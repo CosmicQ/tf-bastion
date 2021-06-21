@@ -10,7 +10,7 @@ module "asg" {
   instance_type            = var.bastion_instance_type
   key_name                 = var.bastion_key_name
   lc_name                  = "${var.bastion_name}_lc"
-  security_groups          = [module.bastion_sg.this_security_group_id]
+  security_groups          = [module.bastion_sg.security_group_id]
   user_data                = data.template_file.userdata.rendered
 
   ebs_block_device = [
