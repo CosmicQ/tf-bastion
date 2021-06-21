@@ -1,17 +1,17 @@
 ##########################################################
 # Create the bastion host + ASG
 module "asg" {
-  source               = "terraform-aws-modules/autoscaling/aws"
-  name                 = var.bastion_name
+  source                   = "terraform-aws-modules/autoscaling/aws"
+  name                     = var.bastion_name
 
   # Launch configuration
-  lc_name              = "${var.bastion_name}_lc"
-  key_name             = var.bastion_key_name
-  image_id             = data.aws_ami.amazon_linux2.id
-  instance_type        = var.bastion_instance_type
-  security_groups      = [module.bastion_sg.this_security_group_id]
-  user_data            = data.template_file.userdata.rendered
-  iam_instance_profile = aws_iam_instance_profile.bastion_profile.id
+  iam_instance_profile_arn = aws_iam_instance_profile.bastion_profile.arn
+  image_id                 = data.aws_ami.amazon_linux2.id
+  instance_type            = var.bastion_instance_type
+  key_name                 = var.bastion_key_name
+  lc_name                  = "${var.bastion_name}_lc"
+  security_groups          = [module.bastion_sg.this_security_group_id]
+  user_data                = data.template_file.userdata.rendered
 
   ebs_block_device = [
     {
@@ -29,13 +29,13 @@ module "asg" {
   ]
 
   # Auto scaling group
-  asg_name                  = "${var.bastion_name}_asg"
-  vpc_zone_identifier       = var.public_subnets
-  health_check_type         = "EC2"
-  min_size                  = var.bastion_min_size
-  max_size                  = var.bastion_max_size
   desired_capacity          = var.bastion_desired_capacity
+  health_check_type         = "EC2"
+  max_size                  = var.bastion_max_size
+  min_size                  = var.bastion_min_size
+  vpc_zone_identifier       = var.public_subnets
   wait_for_capacity_timeout = 0
+
   tags = [
     {
       key                 = "bastion"
