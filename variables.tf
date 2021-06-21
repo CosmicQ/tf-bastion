@@ -3,35 +3,41 @@
 variable "vpc_id" { }
 
 variable "public_subnets" {
-  type        = "list"
+  type        = list(string)
   #["${element(module.vpc.public_subnets, 0)}", "${element(module.vpc.public_subnets, 1)}"]
 }
 variable "bastion_name" {
-  type        = "string"
+  type        = string
   default     = "bastion"
 }
 variable "bastion_key_name" {
-  type        = "string"
+  type        = string
   default     = "default"
 }
 variable "bastion_ingress" {
+  type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 variable "bastion_instance_type" {
+  type        = string
   default     = "t2.nano"
 }
 variable "bastion_min_size" {
+  type        = string
   default     = "1"
 }
 variable "bastion_max_size" {
+  type        = string
   default     = "1"
 }
 variable "bastion_desired_capacity" {
+  type        = string
   default     = "1"
 }
 
 variable bastion_user_data {
-  default = "files/bastion_userdata.sh"
+  type        = string
+  default     = "files/bastion_userdata.sh"
 }
 
 variable "bastion_s3_bucket" {}
@@ -43,7 +49,7 @@ variable "create_bastion_dns" {
 
 variable "bastion_domain" {
   description = "Domain name to use for bastion server (foo.com not bastion.foo.com)"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
