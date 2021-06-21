@@ -11,7 +11,14 @@ module "asg" {
   key_name                 = var.bastion_key_name
   lc_name                  = "${var.bastion_name}_lc"
   security_groups          = [module.bastion_sg.security_group_id]
-  user_data                = data.template_file.userdata.rendered
+  user_data                = templatefile(
+                               "${path.module}/${var.bastion_user_data}",
+                                 {
+                                   bastion_name = var.bastion_name
+                                 }
+                              )
+
+  ##########################################################
 
   ebs_block_device = [
     {
