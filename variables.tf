@@ -79,7 +79,7 @@ data "aws_ami" "amazon_linux2" {
 # Get userdata
 data "template_file" "userdata" {
   template = templatefile(
-    "${var.bastion_user_data}",
+    "${path.module}/${var.bastion_user_data}",
     {
       bastion_name = var.bastion_name
     }
