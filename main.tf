@@ -2,7 +2,6 @@
 # Create the bastion host + ASG
 module "asg" {
   source               = "terraform-aws-modules/autoscaling/aws"
-  version              = "2.9.1"
   name                 = var.bastion_name
 
   # Launch configuration
@@ -93,7 +92,6 @@ resource "aws_s3_bucket" "bastion_bucket" {
 # Create the bastion security group
 module "bastion_sg" {
   source                       = "terraform-aws-modules/security-group/aws//modules/ssh"
-  version                      = "v2.17.0"
   name                         = "${var.bastion_name}_sg"
   description                  = "Allow traffic to Bastion"
   vpc_id                       = var.vpc_id
