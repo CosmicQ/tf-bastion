@@ -3,12 +3,28 @@
 module "asg" {
   source                    = "terraform-aws-modules/autoscaling/aws"
 
-  # Launch Config
+  # Autoscaling Group
+  name                      = "${var.bastion_name}_asg"
+
+  create_asg                = true
+
+  desired_capacity          = var.bastion_desired_capacity
+  health_check_type         = "EC2"
+  max_size                  = var.bastion_max_size
+  min_size                  = var.bastion_min_size
+  vpc_zone_identifier       = var.public_subnets
+  wait_for_capacity_timeout = 0
+
+  # Launch Template
+  lc_name                   = "${var.bastion_name}_lc"
+
+  use_lc                    = true
+  create_lc                 = true
+
   iam_instance_profile_arn  = aws_iam_instance_profile.bastion_profile.arn
   image_id                  = data.aws_ami.amazon_linux2.id
   instance_type             = var.bastion_instance_type
   key_name                  = var.bastion_key_name
-  lc_name                   = "${var.bastion_name}_lc"
   security_groups           = [module.bastion_sg.security_group_id]
   user_data                 = templatefile(
                                 "${path.module}/${var.bastion_user_data}",
@@ -31,15 +47,6 @@ module "asg" {
       volume_type = "gp2"
     },
   ]
-
-  # Auto scaling group
-  name                      = "${var.bastion_name}_asg"
-  desired_capacity          = var.bastion_desired_capacity
-  health_check_type         = "EC2"
-  max_size                  = var.bastion_max_size
-  min_size                  = var.bastion_min_size
-  vpc_zone_identifier       = var.public_subnets
-  wait_for_capacity_timeout = 0
 
   tags = [
     {
