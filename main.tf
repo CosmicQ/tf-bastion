@@ -3,7 +3,7 @@
 module "asg" {
   source                    = "terraform-aws-modules/autoscaling/aws"
 
-  # Launch configuration
+  # Launch Config
   iam_instance_profile_arn  = aws_iam_instance_profile.bastion_profile.arn
   image_id                  = data.aws_ami.amazon_linux2.id
   instance_type             = var.bastion_instance_type
@@ -33,7 +33,7 @@ module "asg" {
   ]
 
   # Auto scaling group
-  asg_name                  = "${var.bastion_name}_asg"
+  name                      = "${var.bastion_name}_asg"
   desired_capacity          = var.bastion_desired_capacity
   health_check_type         = "EC2"
   max_size                  = var.bastion_max_size
