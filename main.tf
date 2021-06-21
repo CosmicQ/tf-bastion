@@ -211,7 +211,7 @@ resource "aws_iam_policy_attachment" "bastion-attach" {
 # Optional resources
 #
 ###################################
-
+/*
 data "aws_route53_zone" "selected" {
   count      = var.create_bastion_dns
   name       = "${var.bastion_domain}."
@@ -225,3 +225,4 @@ resource "aws_route53_record" "bastion_name" {
   ttl        = "300"
   records    = [aws_eip.bastion-eip.public_ip]
 }
+*/
