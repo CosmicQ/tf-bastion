@@ -3,16 +3,16 @@
 module "asg" {
   source               = "terraform-aws-modules/autoscaling/aws"
   version              = "2.9.1"
-  name                 = "${var.bastion_name}"
+  name                 = var.bastion_name
 
   # Launch configuration
   lc_name              = "${var.bastion_name}_lc"
-  key_name             = "${var.bastion_key_name}"
-  image_id             = "${data.aws_ami.amazon_linux2.id}"
-  instance_type        = "${var.bastion_instance_type}"
-  security_groups      = ["${module.bastion_sg.this_security_group_id}"]
-  user_data            = "${data.template_file.userdata.rendered}"
-  iam_instance_profile = "${aws_iam_instance_profile.bastion_profile.id}"
+  key_name             = var.bastion_key_name
+  image_id             = data.aws_ami.amazon_linux2.id
+  instance_type        = var.bastion_instance_type
+  security_groups      = [module.bastion_sg.this_security_group_id]
+  user_data            = data.template_file.userdata.rendered
+  iam_instance_profile = aws_iam_instance_profile.bastion_profile.id
 
   ebs_block_device = [
     {
@@ -31,11 +31,11 @@ module "asg" {
 
   # Auto scaling group
   asg_name                  = "${var.bastion_name}_asg"
-  vpc_zone_identifier       = "${var.public_subnets}"
+  vpc_zone_identifier       = var.public_subnets
   health_check_type         = "EC2"
-  min_size                  = "${var.bastion_min_size}"
-  max_size                  = "${var.bastion_max_size}"
-  desired_capacity          = "${var.bastion_desired_capacity}"
+  min_size                  = var.bastion_min_size
+  max_size                  = var.bastion_max_size
+  desired_capacity          = var.bastion_desired_capacity
   wait_for_capacity_timeout = 0
   tags = [
     {
@@ -45,7 +45,7 @@ module "asg" {
     },
     {
       key                 = "s3_bucket_name"
-      value               = "${var.bastion_s3_bucket}"
+      value               = var.bastion_s3_bucket
       propagate_at_launch = true
     },
     {
@@ -73,20 +73,20 @@ resource "aws_eip" "bastion-eip" {
     bastion     = "true"
     Name        = "${var.bastion_name}_eip"
     Terraform   = "true"
-    Workspace   = "${terraform.workspace}"
+    Workspace   = terraform.workspace
   }
 }
 
 # Create the S3 bucket
 resource "aws_s3_bucket" "bastion_bucket" {
-  bucket        = "${var.bastion_s3_bucket}"
+  bucket        = var.bastion_s3_bucket
   acl           = "private"
   force_destroy = true
 
   tags     = {
     bastion     = "true"
     Terraform   = "true"
-    Workspace   = "${terraform.workspace}"
+    Workspace   = terraform.workspace
   }
 }
 
@@ -96,8 +96,8 @@ module "bastion_sg" {
   version                      = "v2.17.0"
   name                         = "${var.bastion_name}_sg"
   description                  = "Allow traffic to Bastion"
-  vpc_id                       = "${var.vpc_id}"
-  ingress_cidr_blocks          = "${var.bastion_ingress}"
+  vpc_id                       = var.vpc_id
+  ingress_cidr_blocks          = var.bastion_ingress
   tags     = {
     Name        = "BastionSG"
     Terraform   = "true"
@@ -199,13 +199,13 @@ EOF
 
 resource "aws_iam_instance_profile" "bastion_profile" {
   name = "${var.bastion_name}_profile"
-  role = "${aws_iam_role.bastion_role.name}"
+  role = aws_iam_role.bastion_role.name
 }
 
 resource "aws_iam_policy_attachment" "bastion-attach" {
   name       = "${var.bastion_name}_attachment"
-  roles      = ["${aws_iam_role.bastion_role.name}"]
-  policy_arn = "${aws_iam_policy.policy.arn}"
+  roles      = [aws_iam_role.bastion_role.name]
+  policy_arn = aws_iam_policy.policy.arn
 }
 
 ###################################
@@ -215,15 +215,15 @@ resource "aws_iam_policy_attachment" "bastion-attach" {
 ###################################
 
 data "aws_route53_zone" "selected" {
-  count      = "${var.create_bastion_dns}"
+  count      = var.create_bastion_dns
   name       = "${var.bastion_domain}."
 }
 
 resource "aws_route53_record" "bastion_name" {
-  count      = "${var.create_bastion_dns}"
-  zone_id    = "${data.aws_route53_zone.selected.zone_id}"
+  count      = var.create_bastion_dns
+  zone_id    = data.aws_route53_zone.selected.zone_id
   name       = "${var.bastion_name}.${data.aws_route53_zone.selected.name}"
   type       = "A"
   ttl        = "300"
-  records    = ["${aws_eip.bastion-eip.public_ip}"]
+  records    = [aws_eip.bastion-eip.public_ip]
 }
