@@ -1,21 +1,18 @@
 ##########################################################
 # Create the bastion host + ASG
 module "asg" {
-  source                   = "terraform-aws-modules/autoscaling/aws"
-  name                     = var.bastion_name
+  source                    = "terraform-aws-modules/autoscaling/aws"
 
   # Launch configuration
-  iam_instance_profile_arn = aws_iam_instance_profile.bastion_profile.arn
-  image_id                 = data.aws_ami.amazon_linux2.id
-  instance_type            = var.bastion_instance_type
-  key_name                 = var.bastion_key_name
-  lc_name                  = "${var.bastion_name}_lc"
-  security_groups          = [module.bastion_sg.security_group_id]
-  user_data                = templatefile(
-                               "${path.module}/${var.bastion_user_data}",
-                                 {
-                                   bastion_name = var.bastion_name
-                                 }
+  iam_instance_profile_arn  = aws_iam_instance_profile.bastion_profile.arn
+  image_id                  = data.aws_ami.amazon_linux2.id
+  instance_type             = var.bastion_instance_type
+  key_name                  = var.bastion_key_name
+  lc_name                   = "${var.bastion_name}_lc"
+  security_groups           = [module.bastion_sg.security_group_id]
+  user_data                 = templatefile(
+                                "${path.module}/${var.bastion_user_data}",
+                                  { bastion_name = var.bastion_name }
                               )
 
   ##########################################################
@@ -36,6 +33,7 @@ module "asg" {
   ]
 
   # Auto scaling group
+  asg_name                  = "${var.bastion_name}_asg"
   desired_capacity          = var.bastion_desired_capacity
   health_check_type         = "EC2"
   max_size                  = var.bastion_max_size
