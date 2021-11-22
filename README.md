@@ -77,6 +77,8 @@ NOTE: For 'bastion_user_data' you can use the default as listed above in the exa
 
 ## Outputs
 ```
- bastion_sg_id  - ID of the security group that gets created
- bastion_eip_id - ID of the elastic IP that gets created
+ bastion_sg_id   - ID of the security group that gets created
+ bastion_eip_id  - ID of the EIP ID that gets created
+ bastion_eip_ip  - IP Address of the EIP assigned to the bastion host
+ bastion_eip_dns - DNS assignment of the EIP
 ```

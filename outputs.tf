@@ -19,5 +19,5 @@ output "bastion_eip_ip" {
 # Elastic DNS
 output "bastion_eip_dns" {
   description = "The DNS of the Bastion EIP"
-  value       = "${aws_eip.bastion-eip.public_dns}
+  value       = "${aws_eip.bastion-eip.public_dns}"
 }
