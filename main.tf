@@ -4,48 +4,44 @@ module "asg" {
   source                    = "terraform-aws-modules/autoscaling/aws"
 
   # Autoscaling Group
+  create                    = true
   name                      = "${var.bastion_name}_asg"
 
-  create_asg                = true
-
-  desired_capacity          = var.bastion_desired_capacity
-  health_check_type         = "EC2"
-  max_size                  = var.bastion_max_size
   min_size                  = var.bastion_min_size
-  vpc_zone_identifier       = var.public_subnets
+  max_size                  = var.bastion_max_size
+  desired_capacity          = var.bastion_desired_capacity
   wait_for_capacity_timeout = 0
+  health_check_type         = "EC2"
+  vpc_zone_identifier       = var.public_subnets
 
   # Launch Template
-  lc_name                   = "${var.bastion_name}_lc"
+  create_launch_template      = true
+  launch_template_name        = "${var.bastion_name}_lc"
+  update_default_version      = true
 
-  use_lc                    = true
-  create_lc                 = true
-
-  iam_instance_profile_arn  = aws_iam_instance_profile.bastion_profile.arn
-  image_id                  = data.aws_ami.amazon_linux2.id
-  instance_type             = var.bastion_instance_type
-  key_name                  = var.bastion_key_name
-  security_groups           = [module.bastion_sg.security_group_id]
-  user_data                 = templatefile(
-                                "${path.module}/${var.bastion_user_data}",
+  # IAM role & instance profile
+  create_iam_instance_profile = true
+  iam_instance_profile_arn    = aws_iam_instance_profile.bastion_profile.arn
+  image_id                    = data.aws_ami.amazon_linux2.id
+  instance_type               = var.bastion_instance_type
+  key_name                    = var.bastion_key_name
+  security_groups             = [module.bastion_sg.security_group_id]
+  user_data                   = templatefile(
+                                  "${path.module}/${var.bastion_user_data}",
                                   { bastion_name = var.bastion_name }
-                              )
+                                )
 
   ##########################################################
 
-  ebs_block_device = [
+  block_device_mappings = [
     {
       device_name           = "/dev/xvdz"
-      volume_type           = "gp2"
-      volume_size           = "10"
-      delete_on_termination = true
-    },
-  ]
-  root_block_device = [
-    {
-      volume_size = "10"
-      volume_type = "gp2"
-    },
+      ebs = {
+        volume_type           = "gp2"
+        volume_size           = "20"
+        delete_on_termination = true
+      }
+    }
   ]
 
   tags = [
