@@ -44,29 +44,12 @@ module "asg" {
     }
   ]
 
-  tags = [
-    {
-      key                 = "bastion"
-      value               = "true"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "s3_bucket_name"
-      value               = var.bastion_s3_bucket
-      propagate_at_launch = true
-    },
-    {
-      key                 = "Terraform"
-      value               = "true"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "Workspace"
-      value               = "${terraform.workspace}"
-      propagate_at_launch = true
+  tags = {
+      bastion = "true"
+      s3_bucket_name = var.bastion_s3_bucket
+      Terraform = "true"
+      Workspace = "${terraform.workspace}"
     }
-  ]
-
 }
 
 ##########################################################
